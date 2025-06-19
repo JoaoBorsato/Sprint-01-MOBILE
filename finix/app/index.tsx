@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
@@ -16,13 +17,14 @@ const TelaDeLoading = () => (
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const checkLogin = async () => {
       try {
         const token = await AsyncStorage.getItem("userToken");
         setIsLoggedIn(!!token);
-      } catch (e) {
+      } catch {
         setIsLoggedIn(false);
       } finally {
         setIsLoading(false);
@@ -31,9 +33,16 @@ const Index = () => {
     checkLogin();
   }, []);
 
+  useEffect(() => {
+    if (!isLoading && isLoggedIn) {
+      router.replace({ pathname: "/(drawer)/Principal" as any });
+    }
+  }, [isLoading, isLoggedIn, router]);
+
   if (isLoading) return <TelaDeLoading />;
   if (isLoggedIn) {
-    return <View style={styles.telaDeLoading}><ActivityIndicator size="large" color="#0a0" /><View></View></View>;
+    // Enquanto redireciona, mostra loading
+    return <TelaDeLoading />;
   } else {
     return <SemLogin />;
   }
