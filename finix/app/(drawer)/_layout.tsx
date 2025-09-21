@@ -1,4 +1,4 @@
-import { Drawer } from 'expo-router/drawer';
+import Drawer from 'expo-router/drawer';
 import * as React from 'react';
 
 export default function DrawerLayout() {
@@ -10,8 +10,12 @@ export default function DrawerLayout() {
         drawerInactiveTintColor: '#d9d9d9',
         headerStyle: { backgroundColor: '#121212' },
         headerTintColor: '#d9d9d9',
-        headerTitle: '', // Oculta o nome da tela
+        headerTitle: '',
       }}
-    />
+    >
+      <Drawer.Screen name="Principal" />
+      <Drawer.Screen name="Usuario" />
+      {/* Adicione outras telas aqui na ordem desejada */}
+    </Drawer>
   );
 }

@@ -1,28 +1,22 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Stack, useSegments } from "expo-router";
+import { Stack, useSegments, Slot } from "expo-router";
 import { Pressable } from "react-native";
 
 export default function Layout() {
   const segments = useSegments();
-
-  // Pega o nome da tela atual (último segmento da rota)
-  const currentRoute = segments[segments.length - 1];
-
-  // Lista de telas que NÃO devem mostrar o header
-  const hiddenHeaderScreens = ["Principal", "Usuario", "SemLogin"];
-
-  const hideHeader = hiddenHeaderScreens.includes(currentRoute);
-
+  // Se estiver dentro do (drawer), não renderiza Stack, só Slot
+  if (segments[0] === "(drawer)") {
+    return <Slot />;
+  }
   return (
     <Stack
-      screenOptions={({ navigation }) => ({
-        headerShown: !hideHeader, // só oculta nas telas específicas
+      screenOptions={({ navigation, route }) => ({
         headerBackTitle: "",
         headerTitle: "",
         headerTintColor: "#d9d9d9",
         headerStyle: { backgroundColor: "#121212", height: 100 },
         headerLeft: ({ canGoBack }) =>
-          canGoBack && !hideHeader ? (
+          canGoBack && route.name !== "SemLogin" ? (
             <Pressable
               onPress={() => navigation.goBack()}
               style={{
